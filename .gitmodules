@@ -1,3 +1,6 @@
 [submodule "MCP3208_reader"]
 	path = MCP3208_reader
 	url = https://gitlab.com/grcc/library/mcp-3208-reader.git
+[submodule "DUALSHOCK2"]
+	path = DUALSHOCK2
+	url = https://gitlab.com/takuji.coroton.thanks/dualshock2.git
