@@ -1,0 +1,3 @@
+[submodule "MCP3208_reader"]
+	path = MCP3208_reader
+	url = https://gitlab.com/grcc/library/mcp-3208-reader.git
