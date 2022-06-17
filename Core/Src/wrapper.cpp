@@ -1,6 +1,7 @@
 #include "wrapper.hpp"
 
 /* Include Begin */
+#include ""
 /* Include End */
 
 /* Enum Begin */
@@ -13,6 +14,7 @@
 /* Variable End */
 
 /* Class Constructor Begin */
+DUALSHOCK2 dualshock2(hspi1, SPI_SS_GPIO_Port, SPI_SS_Pin, 0xF);
 /* Class Constructor End */
 
 /* Function Prototype Begin */
