@@ -4,3 +4,6 @@
 [submodule "DUALSHOCK2"]
 	path = DUALSHOCK2
 	url = https://gitlab.com/takuji.coroton.thanks/dualshock2.git
+[submodule "74HC595"]
+	path = 74HC595
+	url = https://gitlab.com/takuji.coroton.thanks/74hc595.git
