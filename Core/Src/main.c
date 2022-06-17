@@ -98,7 +98,7 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM14_Init();
   MX_TIM15_Init();
-  MX_I2C2_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   init();//written by user
   /* USER CODE END 2 */
@@ -150,8 +150,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C2;
-  PeriphClkInit.I2c2ClockSelection = RCC_I2C2CLKSOURCE_HSI;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_HSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
