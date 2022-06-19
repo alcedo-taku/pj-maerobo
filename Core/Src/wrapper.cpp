@@ -9,6 +9,7 @@
 #include "tim.h"
 #include "DUALSHOCK2.hpp"
 #include "TC74HC595.hpp"
+#include "mcp3208.hpp"
 /* Include End */
 
 /* Enum Begin */
@@ -37,13 +38,14 @@ const std::vector<Timer> md_pwm = {	{&htim4,  TIM_CHANNEL_4},
 									{&htim14, TIM_CHANNEL_1} };
 std::array<int16_t, 8> md_compare;
 int16_t debug_md_compare[8];
-
-//Timer md_pwm[2] = {{&htim4, TIM_CHANNEL_1}, {&htim4,  TIM_CHANNEL_2}};
+std::array<uint16_t, 8> adc_value_array;
+uint16_t debug_adc_value_array[8];
 /* Variable End */
 
 /* Class Constructor Begin */
 DUALSHOCK2 dualshock2(hspi1, SPI1_SS_GPIO_Port, SPI1_SS_Pin, 0xF);
 tc74hc595::TC74HC595 tc74hc595_writer({SR_SI_GPIO_Port, SR_SI_Pin}, {SR_SCK_GPIO_Port, SR_SCK_Pin}, {SR_RCK_GPIO_Port, SR_RCK_Pin});
+mcp3208::MCP3208 mcp3208_reader(hspi2,SPI2_SS_GPIO_Port,SPI2_SS_Pin);
 /* Class Constructor End */
 
 /* Function Prototype Begin */
@@ -56,6 +58,7 @@ void init(void){
 	for (uint8_t i=0; i < 8; i++) {
 		HAL_TIM_PWM_Start(md_pwm[i].htim, md_pwm[i].channel);
 	}
+	mcp3208_reader.init();
 }
 
 void loop(void){
@@ -64,6 +67,10 @@ void loop(void){
 	std::copy(receive_data.begin(), receive_data.end(), debug_receive_data);
 	stick_data = dualshock2.get_stick_data();
 	std::copy(stick_data.begin(), stick_data.end(), debug_stick_data);
+
+	mcp3208_reader.update(0xF);
+	adc_value_array = mcp3208_reader.get();
+	std::copy(adc_value_array.begin(), adc_value_array.end(), debug_adc_value_array);
 
 	for (uint8_t i = 0; i < 4; i++) {
 		md_compare[i] = stick_data[i]*8;
@@ -86,12 +93,6 @@ void loop(void){
 		}
 	}
 	tc74hc595_writer.update((uint8_t*)&sr_data, 2);
-
-//	for ( uint8_t i=0; i<16; i++ ) {
-//		sr_data = (1<<i);
-//		tc74hc595_writer.update((uint8_t*)&sr_data, 2);
-//		HAL_Delay(200);
-//	}
 
 	HAL_Delay(200);
 
