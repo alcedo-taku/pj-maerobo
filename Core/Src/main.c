@@ -99,6 +99,7 @@ int main(void)
   MX_TIM14_Init();
   MX_TIM15_Init();
   MX_I2C1_Init();
+  MX_TIM18_Init();
   /* USER CODE BEGIN 2 */
   init();//written by user
   /* USER CODE END 2 */
