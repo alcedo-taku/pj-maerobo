@@ -159,7 +159,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 		// md_compare の更新
 		state = maerobo_2022.get_state();
-		if(state == mb_22::Maerobo_State::WAITING){
+		if(state == mb_22::Maerobo_State::WAITING || state == mb_22::Maerobo_State::ENDING){ // 待機時と終了時のみ手動有効
 			for (uint8_t i = 0; i < 4; i++) {
 				md_compare[i] = stick_data[i]*8;
 			}
