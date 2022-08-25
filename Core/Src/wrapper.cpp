@@ -197,7 +197,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		for (int i = 3; i < 8; ++i) {
 			HAL_GPIO_WritePin(led[i].port, led[i].pin, GPIO_PIN_RESET);
 		}
-		HAL_GPIO_WritePin(led[(uint8_t)state+3].port, led[(uint8_t)state+3].pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led[(uint8_t)state+2].port, led[(uint8_t)state+2].pin, GPIO_PIN_SET);
 	}
 }
 /* Function Body End */
