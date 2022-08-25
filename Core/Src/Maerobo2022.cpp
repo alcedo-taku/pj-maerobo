@@ -5,6 +5,7 @@
  */
 
 #include "Maerobo2022.hpp"
+#include "tim.h"
 
 namespace mb_22 {
 
@@ -33,12 +34,18 @@ void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
 			// 展開
 			if (is_expand_completed){
 				md_compare[Motor_Number::EXPAND] = 0;
-				state = Maerobo_State::RELEASING;
+				state = Maerobo_State::CLEARANCE_TIME;
+				clearance_time = HAL_GetTick();
 			}else{
 				int16_t max_compare = 250;
 				if(md_compare[Motor_Number::EXPAND] < max_compare){
 					md_compare[Motor_Number::EXPAND] += max_md_compare_accel;
 				}
+			}
+			break;
+		case Maerobo_State::CLEARANCE_TIME:
+			if(clearance_time + 1000 <= HAL_GetTick()){
+				state = Maerobo_State::RELEASING;
 			}
 			break;
 		case Maerobo_State::RELEASING:
@@ -54,6 +61,7 @@ void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
 			}
 			break;
 		case Maerobo_State::ENDING:
+			clearance_time = HAL_GetTick();
 			break;
 		case Maerobo_State::REDYING:
 			state = Maerobo_State::WAITING;
