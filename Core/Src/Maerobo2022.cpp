@@ -66,7 +66,8 @@ void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
 		case Maerobo_State::REDYING:
 			state = Maerobo_State::WAITING;
 			// 展開部を元に戻す
-			if (is_expand_completed){
+			if(clearance_time + 5000 <= HAL_GetTick()){
+//			if (is_expand_completed){
 				md_compare[Motor_Number::EXPAND] = 0;
 			}else{
 				int16_t max_compare = -250;
