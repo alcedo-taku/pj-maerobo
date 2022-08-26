@@ -22,14 +22,23 @@ void Maerobo_2022::start(){
 			state = Maerobo_State::RELEASING;
 			break;
 		case Maerobo_State::ENDING:
-			state = Maerobo_State::REDYING;
+			state = Maerobo_State::ADDITIONAL_RELEASE;
 			md_compare[Motor_Number::EXPAND]  = 0;
 			md_compare[Motor_Number::RELEASE] = 0;
+			md_compare[Motor_Number::ADDITIONAL_RELEASE] = 0;
+			clearance_time = HAL_GetTick();
+			break;
+		case Maerobo_State::ADDITIONAL_RELEASE:
+			if(2000 < (HAL_GetTick() - clearance_time)){
+				state = Maerobo_State::ADDITIONAL_RELEASE_RETURN;
+				clearance_time = HAL_GetTick() + (HAL_GetTick() - clearance_time);
+			}
 			break;
 	}
 }
 
 void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
+	int16_t max_compare_additional_release = 500;
 	switch (state) {
 		case Maerobo_State::WAITING:
 			break;
@@ -66,6 +75,25 @@ void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
 		case Maerobo_State::ENDING:
 			clearance_time = HAL_GetTick();
 			break;
+
+		// 追加解放
+		case Maerobo_State::ADDITIONAL_RELEASE:
+			if(md_compare[Motor_Number::ADDITIONAL_RELEASE] < max_compare_additional_release){
+				md_compare[Motor_Number::ADDITIONAL_RELEASE] += max_md_compare_accel;
+			}
+			break;
+		case Maerobo_State::ADDITIONAL_RELEASE_RETURN:
+			if(clearance_time <= HAL_GetTick()){
+				md_compare[Motor_Number::ADDITIONAL_RELEASE] = 0;
+				state = Maerobo_State::ENDING;
+			}else{
+				int16_t max_compare = -max_compare_additional_release;
+				if(md_compare[Motor_Number::ADDITIONAL_RELEASE] > max_compare){
+					md_compare[Motor_Number::ADDITIONAL_RELEASE] -= max_md_compare_accel;
+				}
+			}
+			break;
+/*
 		case Maerobo_State::REDYING:
 			state = Maerobo_State::WAITING;
 			// 展開部を元に戻す
@@ -90,6 +118,7 @@ void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
 				state = Maerobo_State::REDYING;
 			}
 			break;
+//*/
 	}
 }
 

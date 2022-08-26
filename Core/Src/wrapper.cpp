@@ -197,7 +197,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		for (int i = 3; i < 8; ++i) {
 			HAL_GPIO_WritePin(led[i].port, led[i].pin, GPIO_PIN_RESET);
 		}
-		HAL_GPIO_WritePin(led[(uint8_t)state+2].port, led[(uint8_t)state+2].pin, GPIO_PIN_SET);
+		switch (state) {
+			case mb_22::Maerobo_State::WAITING:
+			case mb_22::Maerobo_State::EXPANSION:
+			case mb_22::Maerobo_State::CLEARANCE_TIME:
+			case mb_22::Maerobo_State::RELEASING:
+			case mb_22::Maerobo_State::ENDING:
+				HAL_GPIO_WritePin(led[(uint8_t)state+2].port, led[(uint8_t)state+2].pin, GPIO_PIN_SET);
+				break;
+			case mb_22::Maerobo_State::REDYING:
+				HAL_GPIO_WritePin(led[(uint8_t)state].port, led[(uint8_t)state].pin, GPIO_PIN_SET);
+		}
 	}
 }
 /* Function Body End */

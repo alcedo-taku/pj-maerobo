@@ -17,12 +17,15 @@ enum class Maerobo_State : uint8_t{
 	CLEARANCE_TIME,
 	RELEASING,
 	ENDING,
+	ADDITIONAL_RELEASE,
+	ADDITIONAL_RELEASE_RETURN,
 	REDYING,
 };
 
 enum Motor_Number : uint8_t{
 	EXPAND = 0,
 	RELEASE = 3,
+	ADDITIONAL_RELEASE = 5,
 };
 
 class Maerobo_2022 {
