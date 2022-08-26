@@ -18,6 +18,9 @@ void Maerobo_2022::start(){
 			state = Maerobo_State::EXPANSION;
 			md_compare[Motor_Number::EXPAND] = 0;
 			break;
+		case Maerobo_State::CLEARANCE_TIME:
+			state = Maerobo_State::RELEASING;
+			break;
 		case Maerobo_State::ENDING:
 			state = Maerobo_State::REDYING;
 			md_compare[Motor_Number::EXPAND]  = 0;
@@ -44,9 +47,9 @@ void Maerobo_2022::update(bool is_expand_completed, uint16_t claw_angle){
 			}
 			break;
 		case Maerobo_State::CLEARANCE_TIME:
-			if(clearance_time + 2000 <= HAL_GetTick()){
-				state = Maerobo_State::RELEASING;
-			}
+//			if(clearance_time + 2000 <= HAL_GetTick()){
+//				state = Maerobo_State::RELEASING;
+//			}
 			break;
 		case Maerobo_State::RELEASING:
 			// 開放
