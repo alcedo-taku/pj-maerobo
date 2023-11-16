@@ -163,10 +163,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 			for (uint8_t i = 0; i < 4; i++) {
 				md_compare[i] = stick_data[i]*8;
 			}
-			md_compare[4] = (receive_data[9] -receive_data[10])*3;
-			md_compare[5] = (receive_data[11]-receive_data[12])*3;
-			md_compare[6] = (receive_data[17]-receive_data[19])*3;
-			md_compare[7] = (receive_data[18]-receive_data[20])*3;
+			md_compare[4] = (receive_data[9] -receive_data[10])*4;
+			md_compare[5] = (receive_data[11]-receive_data[12])*4;
+			md_compare[6] = (receive_data[17]-receive_data[19])*4;
+			md_compare[7] = (receive_data[18]-receive_data[20])*4;
 		}else{
 			md_compare = maerobo_2022.get_md_compare();
 		}
@@ -174,12 +174,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 		// MDの操作
 		sr_data = 0;
+		int16_t max_compare = 3900;
 		for (uint8_t i=0; i < 8; i++) {
 			if(md_compare[i] >= 0){
-				__HAL_TIM_SET_COMPARE(md_pwm[i].htim, md_pwm[i].channel, md_compare[i]);
+				if(md_compare[i] < max_compare){
+					__HAL_TIM_SET_COMPARE(md_pwm[i].htim, md_pwm[i].channel, md_compare[i]);
+				}else{
+					__HAL_TIM_SET_COMPARE(md_pwm[i].htim, md_pwm[i].channel, max_compare);
+				}
 				sr_data += 1<<(i*2);
 			}else{
-				__HAL_TIM_SET_COMPARE(md_pwm[i].htim, md_pwm[i].channel, -md_compare[i]);
+				if(md_compare[i] > -max_compare){
+					__HAL_TIM_SET_COMPARE(md_pwm[i].htim, md_pwm[i].channel, -md_compare[i]);
+				}else{
+					__HAL_TIM_SET_COMPARE(md_pwm[i].htim, md_pwm[i].channel, -max_compare);
+				}
 				sr_data += 1<<(i*2+1);
 			}
 		}

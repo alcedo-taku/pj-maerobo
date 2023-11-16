@@ -34,6 +34,7 @@ private:
 	std::array<int16_t, 8> md_compare; //
 	uint8_t max_md_compare_accel = 10; //
 	uint32_t clearance_time;
+	uint32_t start_time;
 public:
 	Maerobo_2022();
 	void start();
